@@ -1,0 +1,123 @@
+---
+# LEMP Stack Deployment using Ansible (with variables)
+
+- name: Install and Configure LEMP Stack
+  hosts: localhost
+  become: yes
+
+  vars:
+    web_pkg: nginx
+    db_pkg: mariadb105-server
+    php_pkg:
+      - php
+      - php-fpm
+
+    web_service: nginx
+    db_service: mariadb
+    php_service: php-fpm
+
+    web_root: /usr/share/nginx/html
+    web_file_path: /usr/share/nginx/html/index.php
+
+  tasks:
+
+  - name: Install Nginx
+    ansible.builtin.dnf:
+      name: "{{ web_pkg }}"
+      state: present
+
+  - name: Install MariaDB
+    ansible.builtin.dnf:
+      name: "{{ db_pkg }}"
+      state: present
+
+  - name: Install PHP and PHP-FPM
+    ansible.builtin.dnf:
+      name: "{{ php_pkg }}"
+      state: present
+
+  - name: Start and Enable Nginx
+    ansible.builtin.systemd:
+      name: "{{ web_service }}"
+      state: started
+      enabled: true
+
+  - name: Start and Enable MariaDB
+    ansible.builtin.systemd:
+      name: "{{ db_service }}"
+      state: started
+      enabled: true
+
+  - name: Start and Enable PHP-FPM
+    ansible.builtin.systemd:
+      name: "{{ php_service }}"
+      state: started
+      enabled: true
+
+  - name: Deploy PHP Web Page
+    ansible.builtin.copy:
+      dest: "{{ web_file_path }}"
+      owner: nginx
+      group: nginx
+      mode: '0644'
+      content: |
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>LEMP Stack Deployment</title>
+            <style>
+                body {
+                    margin: 0;
+                    font-family: 'Segoe UI', Tahoma, sans-serif;
+                    background: linear-gradient(135deg, #f48fb1, #fce4ec);
+                }
+                .box {
+                    width: 620px;
+                    margin: 80px auto;
+                    background: #ffffff;
+                    padding: 30px;
+                    border-radius: 18px;
+                    box-shadow: 0 15px 30px rgba(233, 30, 99, 0.35);
+                }
+                h2 {
+                    text-align: center;
+                    color: #c2185b;
+                }
+                .status {
+                    margin-top: 20px;
+                    background: #fce4ec;
+                    padding: 20px;
+                    border-radius: 12px;
+                    line-height: 2;
+                    color: #4a004e;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 25px;
+                    font-size: 13px;
+                    color: #6a1b9a;
+                }
+            </style>
+        </head>
+
+        <body>
+        <div class="box">
+            <h2>💖 LEMP Stack Successfully Deployed</h2>
+
+            <div class="status">
+                ✅ <b>Nginx Web Server:</b> Running <br>
+                ✅ <b>MariaDB Database:</b> Running <br>
+                🐘 <b>PHP Version:</b> <?php echo phpversion(); ?> <br><br>
+
+                🖥️ <b>Server Hostname:</b> <?php echo gethostname(); ?> <br>
+                🌐 <b>Server IP:</b> <?php echo $_SERVER['SERVER_ADDR']; ?> <br>
+                ⏰ <b>Date & Time:</b> <?php echo date("d M Y, H:i:s"); ?>
+            </div>
+
+            <div class="footer">
+                🚀 Deployed using <b>Ansible</b> on <b>Amazon Linux</b><br>
+                👩‍💻 Project by <b>Neha Pawar</b>
+            </div>
+        </div>
+        </body>
+        </html>
