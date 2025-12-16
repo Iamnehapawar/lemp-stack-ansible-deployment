@@ -8,7 +8,7 @@
 
 ---
 
-## 🔹 Project Overview
+##  Project Overview
 
 This project demonstrates a **full LEMP stack deployment** (Linux, Nginx, MariaDB, PHP) using **Ansible**, with variables for flexibility.  
 The playbook installs all components, starts services, and deploys a dynamic PHP web page showing server status.
@@ -52,7 +52,7 @@ The playbook installs all components, starts services, and deploys a dynamic PHP
 1. Navigate to playbook directory:
 
 ```bash
-cd playbook
+  cd playbook
 ```
 
 2. Syntax check (optional):
@@ -87,4 +87,5 @@ Automation Tool: Ansible
 
 ### Author: 
 Neha Pawar
+
 LEMP Stack Deployment using Ansible
